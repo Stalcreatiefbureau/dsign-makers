@@ -349,7 +349,7 @@ function debounceOnWidthChange(fn, ms) {
 window.addEventListener('resize', debounceOnWidthChange(initBasicGSAPSlider, 200));
 
 // ----------------------------------------
-// GSAP Slider
+// Cascading Slider
 // ----------------------------------------
 
 function initCascadingSlider() {
@@ -358,10 +358,10 @@ function initCascadingSlider() {
   const ease = 'power3.inOut';
 
   const breakpoints = [
-    { maxWidth: 479, activeWidth: 0.78, siblingWidth: 0.08 },
-    { maxWidth: 767, activeWidth: 0.70, siblingWidth: 0.10 },
-    { maxWidth: 991, activeWidth: 0.60, siblingWidth: 0.10 },
-    { maxWidth: Infinity, activeWidth: 0.60, siblingWidth: 0.13 },
+    { maxWidth: 479,      activeWidth: 0.85, siblingWidth: 0.08 },
+    { maxWidth: 767,      activeWidth: 0.80, siblingWidth: 0.08 },
+    { maxWidth: 991,      activeWidth: 0.75, siblingWidth: 0.10 },
+    { maxWidth: Infinity, activeWidth: 0.70, siblingWidth: 0.12 },
   ];
 
   const wrappers = document.querySelectorAll('[data-cascading-slider-wrap]');
@@ -432,16 +432,13 @@ function initCascadingSlider() {
 
       const activeSlideWidth = viewportWidth * settings.activeWidth;
       const siblingSlideWidth = viewportWidth * settings.siblingWidth;
-      const farSlideWidth = Math.max(0, (viewportWidth - activeSlideWidth - 2 * siblingSlideWidth - 4 * gap) / 2);
 
       slideWidth = activeSlideWidth;
 
       const visibleSlots = [
-        { slot: -2, width: farSlideWidth },
         { slot: -1, width: siblingSlideWidth },
-        { slot: 0, width: activeSlideWidth },
-        { slot: 1, width: siblingSlideWidth },
-        { slot: 2, width: farSlideWidth },
+        { slot:  0, width: activeSlideWidth },
+        { slot:  1, width: siblingSlideWidth },
       ];
 
       let x = 0;
@@ -451,10 +448,22 @@ function initCascadingSlider() {
         if (i < visibleSlots.length - 1) x += def.width + gap;
       });
 
-      slotCenters['-3'] = slotCenters['-2'] - farSlideWidth / 2 - gap - farSlideWidth / 2;
-      slotWidths['-3'] = farSlideWidth;
-      slotCenters['3'] = slotCenters['2'] + farSlideWidth / 2 + gap + farSlideWidth / 2;
-      slotWidths['3'] = farSlideWidth;
+      // Parkeerposities buiten beeld
+      slotCenters['-2'] = slotCenters['-1'] - siblingSlideWidth - gap;
+      slotWidths['-2']  = 0;
+      slotCenters['2']  = slotCenters['1']  + siblingSlideWidth + gap;
+      slotWidths['2']   = 0;
+      slotCenters['-3'] = slotCenters['-2'] - gap;
+      slotWidths['-3']  = 0;
+      slotCenters['3']  = slotCenters['2']  + gap;
+      slotWidths['3']   = 0;
+
+      // Centreer alle slots in de viewport
+      const totalWidth = siblingSlideWidth + gap + activeSlideWidth + gap + siblingSlideWidth;
+      const centerOffset = (viewportWidth - totalWidth) / 2;
+      Object.keys(slotCenters).forEach(function(key) {
+        slotCenters[key] += centerOffset;
+      });
 
       slides.forEach(function(slide) {
         slide.style.width = slideWidth + 'px';
