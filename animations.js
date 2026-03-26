@@ -1,7 +1,7 @@
 // Register GSAP Plugins
-window.addEventListener('load', function() {
-  gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin);
+gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin);
 
+document.addEventListener('DOMContentLoaded', function() {
   initVimeoBGVideo();
   initMarqueeScrollDirection();
   initBasicGSAPSlider();
