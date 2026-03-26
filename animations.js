@@ -107,13 +107,13 @@ function initMarqueeScrollDirection() {
 
     const marqueeItems = marquee.querySelectorAll('[data-marquee-collection-target]');
     const animation = gsap.to(marqueeItems, {
-      xPercent: -100,
+      xPercent: -100 * marqueeDirectionAttr,
       repeat: -1,
       duration: marqueeSpeed,
       ease: 'linear'
-    }).totalProgress(0.5);
-
-    gsap.set(marqueeItems, { xPercent: marqueeDirectionAttr === 1 ? 100 : -100 });
+    });
+    
+    animation.progress(0.5);
     animation.timeScale(marqueeDirectionAttr);
     animation.play();
 
