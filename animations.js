@@ -1,17 +1,3 @@
-javascriptconsole.log('Script geladen');
-
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM ready');
-  console.log('GSAP beschikbaar:', typeof gsap !== 'undefined');
-  console.log('ScrollTrigger beschikbaar:', typeof ScrollTrigger !== 'undefined');
-  console.log('Draggable beschikbaar:', typeof Draggable !== 'undefined');
-  
-  console.log('Marquee elementen:', document.querySelectorAll('[data-marquee-scroll-direction-target]').length);
-  console.log('Vimeo elementen:', document.querySelectorAll('[data-vimeo-bg-init]').length);
-  console.log('Slider elementen:', document.querySelectorAll('[data-gsap-slider-init]').length);
-});
-
-
 // Register GSAP Plugins
 gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin);
 
