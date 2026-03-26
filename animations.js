@@ -397,4 +397,3 @@ window.addEventListener('resize', debounceOnWidthChange(initBasicGSAPSlider, 200
 document.addEventListener('DOMContentLoaded', function() {
   initBasicGSAPSlider();
 });
-</script>
