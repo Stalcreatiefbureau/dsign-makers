@@ -159,11 +159,6 @@ function initMarqueeScrollDirection() {
   });
 }
 
-// Initialize Marquee with Scroll Direction
-document.addEventListener('DOMContentLoaded', () => {
-  initMarqueeScrollDirection();
-});
-
 // ----------------------------------------
 // GSAP Slider
 // ----------------------------------------
