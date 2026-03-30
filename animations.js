@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
   initVimeoBGVideo();
   initMarqueeScrollDirection();
   initBasicGSAPSlider();
+  initDraggableMarquee();
+  initCascadingSlider();
 });
 
 // ----------------------------------------
