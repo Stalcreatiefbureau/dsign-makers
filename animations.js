@@ -3,7 +3,6 @@ gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin);
 
 document.addEventListener('DOMContentLoaded', function() {
   initVimeoBGVideo();
-  initMarqueeScrollDirection();
   initBasicGSAPSlider();
   initDraggableMarquee();
   initCascadingSlider();
@@ -73,53 +72,6 @@ function initVimeoBGVideo() {
     }
 
     window.addEventListener('resize', adjustVideoSizing);
-  });
-}
-
-// ----------------------------------------
-// Marquee
-// ----------------------------------------
-
-function initMarquee() {
-  document.querySelectorAll('[data-marquee-scroll-direction-target]').forEach((marquee) => {
-    // Query marquee elements
-    const marqueeContent = marquee.querySelector('[data-marquee-collection-target]');
-    const marqueeScroll = marquee.querySelector('[data-marquee-scroll-target]');
-    if (!marqueeContent || !marqueeScroll) return;
-
-    // Get data attributes
-    const { marqueeSpeed: speed, marqueeDirection: direction, marqueeDuplicate: duplicate } = marquee.dataset;
-
-    // Convert data attributes to usable types
-    const marqueeSpeedAttr = parseFloat(speed);
-    const marqueeDirectionAttr = direction === 'right' ? 1 : -1; // 1 for right, -1 for left
-    const duplicateAmount = parseInt(duplicate || 0);
-    const speedMultiplier = window.innerWidth < 479 ? 0.25 : window.innerWidth < 991 ? 0.5 : 1;
-
-    let marqueeSpeed = marqueeSpeedAttr * (marqueeContent.offsetWidth / window.innerWidth) * speedMultiplier;
-
-    // Duplicate marquee content
-    if (duplicateAmount > 0) {
-      const fragment = document.createDocumentFragment();
-      for (let i = 0; i < duplicateAmount; i++) {
-        fragment.appendChild(marqueeContent.cloneNode(true));
-      }
-      marqueeScroll.appendChild(fragment);
-    }
-
-    // GSAP animation for marquee content
-    const marqueeItems = marquee.querySelectorAll('[data-marquee-collection-target]');
-    const animation = gsap.to(marqueeItems, {
-      xPercent: -100, // Move completely out of view
-      repeat: -1,
-      duration: marqueeSpeed,
-      ease: 'linear'
-    }).totalProgress(0.5);
-
-    // Initialize marquee in the correct direction
-    gsap.set(marqueeItems, { xPercent: marqueeDirectionAttr === 1 ? 100 : -100 });
-    animation.timeScale(marqueeDirectionAttr); // Set correct direction
-    animation.play();
   });
 }
 
