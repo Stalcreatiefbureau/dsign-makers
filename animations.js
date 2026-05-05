@@ -2,7 +2,6 @@
 gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin);
 
 document.addEventListener('DOMContentLoaded', function() {
-  initVimeoBGVideo();
   initBasicGSAPSlider();
   initDraggableMarquee();
   initCascadingSlider();
