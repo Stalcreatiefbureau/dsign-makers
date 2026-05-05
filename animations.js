@@ -130,6 +130,7 @@ function initMarquee() {
 function initBasicGSAPSlider() {
   document.querySelectorAll('[data-gsap-slider-init]').forEach(root => {
     if (root._sliderDraggable) root._sliderDraggable.kill();
+    if (root._sliderAutoplay) clearInterval(root._sliderAutoplay);
 
     const sliderId   = root.getAttribute('data-slider-id');
     const collection = root.querySelector('[data-gsap-slider-collection]');
@@ -267,17 +268,21 @@ function initBasicGSAPSlider() {
       });
     }
 
+    function goToSlide(target) {
+      gsap.to(track, {
+        duration: 0.4,
+        x: snapPoints[target],
+        onUpdate: () => updateStatus(gsap.getProperty(track, 'x'))
+      });
+    }
+
     controls.forEach(btn => {
       const dir = btn.getAttribute('data-gsap-slider-control');
       btn.addEventListener('click', () => {
         if (btn.disabled) return;
         const delta  = dir === 'next' ? 1 : -1;
-        const target = activeIndex + delta;
-        gsap.to(track, {
-          duration: 0.4,
-          x: snapPoints[target],
-          onUpdate: () => updateStatus(gsap.getProperty(track, 'x'))
-        });
+        goToSlide(activeIndex + delta);
+        stopAutoplay(); // stop autoplay bij user interactie
       });
     });
 
@@ -294,6 +299,7 @@ function initBasicGSAPSlider() {
       onPress() {
         track.setAttribute('data-gsap-slider-list-status', 'grabbing');
         collectionRect = collection.getBoundingClientRect();
+        stopAutoplay(); // stop autoplay bij drag
       },
       onDrag() {
         setX(this.x);
@@ -317,6 +323,33 @@ function initBasicGSAPSlider() {
 
     setX(0);
     updateStatus(0);
+
+    // === AUTOPLAY ===
+    const autoplaySeconds = parseFloat(root.getAttribute('data-gsap-slider-autoplay'));
+    const pauseOnHover    = root.getAttribute('data-gsap-slider-autoplay-pause') !== 'false';
+
+    function startAutoplay() {
+      if (!autoplaySeconds || autoplaySeconds <= 0) return;
+      stopAutoplay();
+      root._sliderAutoplay = setInterval(() => {
+        const next = activeIndex < snapPoints.length - 1 ? activeIndex + 1 : 0;
+        goToSlide(next);
+      }, autoplaySeconds * 1000);
+    }
+
+    function stopAutoplay() {
+      if (root._sliderAutoplay) {
+        clearInterval(root._sliderAutoplay);
+        root._sliderAutoplay = null;
+      }
+    }
+
+    if (pauseOnHover) {
+      root.addEventListener('mouseenter', stopAutoplay);
+      root.addEventListener('mouseleave', startAutoplay);
+    }
+
+    startAutoplay();
   });
 }
 
